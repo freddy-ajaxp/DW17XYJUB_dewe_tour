@@ -7,7 +7,7 @@ import {
   Button,
   Card,
   Row,
-  Form,
+  Form,Nav,
   InputGroup,
   FormControl,
 } from "react-bootstrap";
@@ -16,6 +16,8 @@ import IconAgen from "../../../icons/agent_1.png";
 import IconGuarantee from "../../../icons/guarantee_1.png";
 import IconHeart from "../../../icons/heart_1.png";
 import IconSupport from "../../../icons/support_1.png";
+import { Link } from "react-router-dom";
+import Navbar from "../../../user/components/navbar/Navbar";
 import JumbImg from "../../../images/Jumbotron.png";
 import Dest1 from "../../../images/Dest1.png";
 import Dest2 from "../../../images/Dest2.png";
@@ -30,13 +32,11 @@ const Home = () => (
   <React.Fragment>
     <div
       style={{
-        backgroundImage:
-          "url(https://www.hipi.info/wp-content/uploads/2014/06/summer-palm-beach-holiday-1500x500-twitter-header-30-1024x341.jpg)",
+        backgroundImage: `url(${require('../../../images/Jumbotron.png')})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
     >
-      {/* <Container style={{backgroundImage: "url(https://www.hipi.info/wp-content/uploads/2014/06/summer-palm-beach-holiday-1500x500-twitter-header-30-1024x341.jpg)",  backgroundRepeat: "no-repeat",  backgroundSize: "cover"}}>     */}
       <Jumbotron
         className="jumbotron"
         style={{ background: "rgba(0,0,0,0.0)", color: "#fff" }}
@@ -44,7 +44,7 @@ const Home = () => (
         <h1 style={{ textAlign: "left", textShadow: "2px 2px #000000" }}>
           Explore
         </h1>
-        <h3 style={{ textAlign: "left", textShadow: "2px 2px #000000" }}>
+        <h3 style={{ textAlign: "left", textShadow: "2px 2px #000000", FontFamily: "Product Sans Thin"}}>
           Your Amazing City Together
         </h3>
         <br></br>
@@ -89,12 +89,16 @@ const Home = () => (
             </Card.Body>
           </Card>
           <Card style={{ width: "12rem", margin: "40px" }}>
-            <Card.Img
+          <Nav.Link>
+          <Link to="/DetailTrip">
+          <Card.Img
               style={{ width: "5rem", marginTop: "30%" }}
               className="rounded mx-auto d-block"
               variant="top"
               src={IconHeart}
             />
+          </Link>
+          </Nav.Link>
             <Card.Body>
               <Card.Title style={{ textAlign: "center" }}>
                 Travellers Love Us
@@ -121,12 +125,14 @@ const Home = () => (
             </Card.Body>
           </Card>
           <Card style={{ width: "12rem", margin: "40px" }}>
+          <a href="/DetailTrip">
             <Card.Img
               style={{ width: "5rem", marginTop: "30%" }}
               className="rounded mx-auto d-block"
               variant="top"
               src={IconAgen}
             />
+            </a>
             <Card.Body>
               <Card.Title style={{ textAlign: "center" }}>
                 Our Dedicated Support
@@ -145,12 +151,14 @@ const Home = () => (
         </Row>
 
         <Row>
+        
           <Card style={{ width: "18rem", margin: "35px" }}>
-            <Card.Img
+          <Link to="/DetailTrip">            <Card.Img
               style={{ padding: "10px", align: "center" }}
               variant="top"
               src={Dest1}
-            />
+            /></Link>
+
             <Card.Body>
               <Card.Title style={{ fontSize: "medium" }}>
                 <b>6D/4N Exciting Summer in ...</b>
@@ -162,11 +170,13 @@ const Home = () => (
             </Card.Body>
           </Card>
           <Card style={{ width: "18rem", margin: "35px" }}>
+          <a href="/DetailTrip">
             <Card.Img
               style={{ padding: "10px", align: "center" }}
               variant="top"
               src={Dest2}
             />
+            </a>
             <Card.Body>
               <Card.Title style={{ fontSize: "medium" }}>
                 <b>8D/6N Wonderful Autum ...</b>
@@ -178,11 +188,13 @@ const Home = () => (
             </Card.Body>
           </Card>
           <Card style={{ width: "18rem", margin: "35px" }}>
+          <a href="/DetailTrip">
             <Card.Img
               style={{ padding: "10px", align: "center" }}
               variant="top"
               src={Dest3}
             />
+            </a>
             <Card.Body>
               <Card.Title style={{ fontSize: "medium" }}>
                 <b>4D/3N Overland Jakarta B...</b>
@@ -194,11 +206,13 @@ const Home = () => (
             </Card.Body>
           </Card>
           <Card style={{ width: "18rem", margin: "35px" }}>
+          <a href="/DetailTrip">
             <Card.Img
               style={{ padding: "10px", align: "center" }}
               variant="top"
               src={Dest4}
             />
+            </a>
             <Card.Body>
               <Card.Title style={{ fontSize: "medium" }}>
                 <b>4D/3N Labuan Bajo Delight</b>
@@ -210,11 +224,13 @@ const Home = () => (
             </Card.Body>
           </Card>
           <Card style={{ width: "18rem", margin: "35px" }}>
+          <a href="/DetailTrip">
             <Card.Img
               style={{ padding: "10px", align: "center" }}
               variant="top"
               src={Dest5}
             />
+            </a>
             <Card.Body>
               <Card.Title style={{ fontSize: "medium" }}>
                 <b>5D/4N Magic Tokyo Fun</b>

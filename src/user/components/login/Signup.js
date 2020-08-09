@@ -7,10 +7,9 @@ import "./Login.css";
 
 
 const Signup = () => {
-    const [show, setShow] = useState(false);
-  
-    const SignUpClose = () => setShow(false);
-    const SignUpShow = () => setShow(true);
+    const [signupShow, setShowSignup] = useState(false);
+    const SignUpClose = () => setShowSignup(false);
+    const SignUpShow = () => setShowSignup(true);
   
     return (
       <React.Fragment>
@@ -20,7 +19,7 @@ const Signup = () => {
         </Button>
         
   
-        <Modal show={show} onHide={SignUpClose}>
+        <Modal show={signupShow} onHide={SignUpClose}>
         <Form>
           <Modal.Header closeButton>
             <Modal.Title>Register</Modal.Title>

@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 //import './App.css';
 import "./Login.css";
-
+import './fonts/FontsFree.ttf';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./user/pages/home/Home";
 import AddTrip from "./user/pages/add-trip/AddTrip";
@@ -21,34 +21,54 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import ScrollToTop from "react-router-scroll-top";
 function App() {
   return (
     <React.Fragment>
-      
       <Router>
-      <Navbar></Navbar>
+        <Navbar></Navbar>
         <div className="App" style={{ backgroundColor: " #edf2f3 " }}>
           <Switch>
             <Route path="/DetailTrip">
-              <DetailTrip />
+              <ScrollToTop>
+                <DetailTrip />
+              </ScrollToTop>
             </Route>
             <Route path="/AddTrip">
-              <AddTrip />
+              <ScrollToTop>
+                {" "}
+                <AddTrip />
+              </ScrollToTop>
             </Route>
             <Route path="/IncomeTrip">
-              <IncomeTrip />
+              <ScrollToTop>
+                {" "}
+                <IncomeTrip />
+              </ScrollToTop>
             </Route>
             <Route path="/ListTransaction">
-              <ListTransaction />
+              <ScrollToTop>
+                {" "}
+                <ListTransaction />
+              </ScrollToTop>
             </Route>
             <Route path="/Payment">
-              <Payment />
+              <ScrollToTop>
+                {" "}
+                <Payment />
+              </ScrollToTop>
             </Route>
             <Route path="/Profile">
-              <Profile />
+              <ScrollToTop>
+                {" "}
+                <Profile />
+              </ScrollToTop>
             </Route>
             <Route path="/">
-              <Home />
+              <ScrollToTop>
+                {" "}
+                <Home />
+              </ScrollToTop>
             </Route>
           </Switch>
         </div>

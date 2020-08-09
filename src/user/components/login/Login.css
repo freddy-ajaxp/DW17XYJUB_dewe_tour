@@ -1,15 +1,47 @@
 .authentication__header {
-    color: white;
-    text-align: center;
-  }
-  
-  .authentication {
-    width: 100%;
-    max-width: 50rem;
-    margin: 7rem auto;
-    text-align: center;
-  }
-  
-  .authentication form {
-    margin-bottom: 1rem;
-  }
+  color: white;
+  text-align: center;
+}
+
+.authentication {
+  width: 100%;
+  max-width: 50rem;
+  margin: 7rem auto;
+  text-align: center;
+}
+
+.authentication form {
+  margin-bottom: 1rem;
+}
+.loginbtn {
+  /* Rectangle 1 */
+  width: 100px;
+  height: 30px;
+  left: 1120px;
+  top: 23px;
+
+  fill: Solid #ffffff;
+  stroke: Solid #ffffff;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.registerbtn {
+  /* Button Register */
+
+/* Rectangle 1 */
+width: 100px;
+height: 30px;
+left: 1120px;
+top: 23px;
+
+fill: Solid #ffffff;
+stroke: Solid #ffffff;
+box-sizing: border-box;
+border-radius: 5px;
+background: #FFAF00;
+border-radius: 5px;
+color: #FFFFFF;
+
+
+}

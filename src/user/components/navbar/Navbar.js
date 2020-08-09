@@ -20,66 +20,54 @@ import { Link } from "react-router-dom";
 // import JumbImg from "../../../images/Jumbotron.png";
 const NavUser = () => {
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand >
-      <Nav.Link>
+    <Navbar bg-color="red " expand="lg" className="">
+      <Navbar.Brand>
+        <Nav.Link>
           <Link to="/">
-          <Image
-          style={{ width: "100%", paddingBottom: "1rem" }}
-          src={DWT}
-          fluid
-        />
+            <Image
+              style={{ width: "100%", paddingBottom: "1rem" }}
+              src={DWT}
+              fluid
+            />
           </Link>
-          </Nav.Link>
-        
+        </Nav.Link>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link>
-          <Link to="/">Home</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/DetailTrip">DetailTrip</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/AddTrip">AddTrip</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/IncomeTrip">IncomeTrip</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/ListTransaction">ListTransaction</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/Payment">Payment</Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/Profile">Profile</Link>
-          </Nav.Link>
-
-          <Nav.Link href="/"></Nav.Link>
-        </Nav>
-        <Form inline>
-          <NavDropdown title="More" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">
-              {" "}
-              <Image style={{ width: "30px" }} src={UserIcon} fluid /> Profile
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              <Image style={{ width: "30px" }} src={BillIcon} fluid /> Pay
-            </NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.3">
-              <Image style={{ width: "30px" }} src={LogoutIcon} fluid /> logout
-            </NavDropdown.Item>
-          </NavDropdown>
-          <Login></Login>
-          <Signup></Signup>
-          <Picture></Picture>
-        </Form>
+      <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+        <Login></Login>
+        <NavDropdown
+          title={<Image src={UserIcon} width="30" height="30"/>}
+          roundedCircle
+          id="basic-nav-dropdown"
+          drop="left"
+        >
+        
+          <NavDropdown.Item href="#">
+          <Nav>
+          <Link to="/Profile">
+          <Image style={{ width: "30px" }} src={UserIcon} fluid /> Profile
+          </Link>
+            </Nav>
+          </NavDropdown.Item>
+          <NavDropdown.Item href="#action/3.2">
+          <Nav>
+          <Link to="/Payment">
+          <Image style={{ width: "30px" }} src={BillIcon} fluid /> PayProfile
+          </Link>
+            </Nav>
+          </NavDropdown.Item>
+          <NavDropdown.Divider />
+          <NavDropdown.Item href="#action/3.3">
+          <Link to="/">
+          <Image style={{ width: "30px" }} src={LogoutIcon} fluid /> logout
+          </Link>
+          </NavDropdown.Item>
+        </NavDropdown>
+        {/* gak kepakai */}
+        {/* <Signup></Signup> */}
+        {/* <Picture></Picture> */}
       </Navbar.Collapse>
     </Navbar>
+    
   );
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter, Switch, Route } from "react-router-dom";
-import DestImg from "../../../images/Dest-Melbourne-1.jpg";
+import DestImg from "../../../images/Dest-Melbourne-1.png";
 import Icons from "../../../icons/BuildingIcon.png";
 import MinusIcon from "../../../icons/Minus.png";
 import PlusIcon from "../../../icons/Plus.png";

@@ -1,6 +1,7 @@
 import React from "react";
 import { MemoryRouter, Switch, Route } from "react-router-dom";
-import DestImg from "../../../images/Dest-Melbourne-1.jpg";
+import DestImg from "../../../images/Dest-Melbourne-1.png";
+
 import Icons from "../../../icons/BuildingIcon.png";
 import MinusIcon from "../../../icons/Minus.png";
 import PlusIcon from "../../../icons/Plus.png";
@@ -17,9 +18,7 @@ import {
   FormControl,
   Image,
 } from "react-bootstrap";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import { LinkContainer } from "react-router-bootstrap/lib/ReactRouterBootstrap";
-
+import { Link } from "react-router-dom";
 const Homee = () => <span>Home</span>;
 
 const About = () => <span>About</span>;
@@ -97,10 +96,12 @@ const Home = () => (
             <Form.File.Input />
           </Form.File>
         </div>
-
+        <Link to="/ListTransaction">
         <Button style={{}} className="text-center" variant="warning" type="submit">
           Submit
         </Button>
+        </Link>
+        
       </Form>
     </Container>
   </React.Fragment>

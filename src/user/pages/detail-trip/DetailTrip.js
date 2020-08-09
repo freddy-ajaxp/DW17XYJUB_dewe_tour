@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter, Switch, Route } from "react-router-dom";
-import DestImg from "../../../images/Dest-Melbourne-1.jpg";
+import DestImg from "../../../images/Dest-Melbourne-1.png";
 import DestImg2 from "../../../images/Dest-Melbourne-2.png";
 import DestImg3 from "../../../images/Dest-Melbourne-3.png";
 import DestImg4 from "../../../images/Dest-Melbourne-4.png";
@@ -11,8 +11,8 @@ import MealIcon from "../../../icons/MealIcon.png";
 import PlaneIcon from "../../../icons/PlaneIcon.png";
 import MinusIcon from "../../../icons/Minus.png";
 import PlusIcon from "../../../icons/Plus.png";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
+import { Link } from "react-router-dom";
 import {
   Button,
   CardGroup,
@@ -21,7 +21,6 @@ import {
   Col,
   Form,
   InputGroup,
-  FormControl,
   Image,
 } from "react-bootstrap";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -80,9 +79,18 @@ const Home = () => (
       </Container>
       <Container>
         <CardGroup>
-          <Card style={{ margin: "20px", border: "none" }}>
+          <Card
+            style={{
+              margin: "20px",
+              border: "none",
+              backgroundColor: "transparent",
+            }}
+          >
             <Card.Body>
-              <Card.Text>Accomodation</Card.Text>
+              <Card.Text style={{ textAlign: "center" }}>
+                {" "}
+                Accomodation
+              </Card.Text>
               <span class="d-inline-block btn float-left">
                 <Image
                   style={{ maxWidth: "100rem", marginBottom: "2rem" }}
@@ -92,9 +100,17 @@ const Home = () => (
               <Card.Text>Hotel 4 Nights</Card.Text>
             </Card.Body>
           </Card>
-          <Card style={{ margin: "20px", border: "none" }}>
+          <Card
+            style={{
+              margin: "20px",
+              border: "none",
+              backgroundColor: "transparent",
+            }}
+          >
             <Card.Body>
-              <Card.Text>Transportation</Card.Text>
+              <Card.Text style={{ textAlign: "center" }}>
+                Transportation
+              </Card.Text>
               <span class="d-inline-block btn float-left">
                 <Image
                   style={{ maxWidth: "100rem", marginBottom: "2rem" }}
@@ -104,9 +120,15 @@ const Home = () => (
               <Card.Text>Qatar Airways</Card.Text>
             </Card.Body>
           </Card>
-          <Card style={{ margin: "20px", border: "none" }}>
+          <Card
+            style={{
+              margin: "20px",
+              border: "none",
+              backgroundColor: "transparent",
+            }}
+          >
             <Card.Body>
-              <Card.Text>Eat</Card.Text>
+              <Card.Text style={{ textAlign: "center" }}>Eat</Card.Text>
               <span class="d-inline-block btn float-left">
                 <Image
                   style={{ maxWidth: "100rem", marginBottom: "2rem" }}
@@ -116,9 +138,15 @@ const Home = () => (
               <Card.Text>Included as ltinerary</Card.Text>
             </Card.Body>
           </Card>
-          <Card style={{ margin: "20px", border: "none" }}>
+          <Card
+            style={{
+              margin: "20px",
+              border: "none",
+              backgroundColor: "transparent",
+            }}
+          >
             <Card.Body>
-              <Card.Text>Duration</Card.Text>
+              <Card.Text style={{ textAlign: "center" }}>Duration</Card.Text>
               <span class="d-inline-block btn float-left">
                 <Image
                   style={{ maxWidth: "100rem", marginBottom: "2rem" }}
@@ -128,9 +156,15 @@ const Home = () => (
               <Card.Text>6 Day 4 Night</Card.Text>
             </Card.Body>
           </Card>
-          <Card style={{ margin: "20px", border: "none" }}>
+          <Card
+            style={{
+              margin: "20px",
+              border: "none",
+              backgroundColor: "transparent",
+            }}
+          >
             <Card.Body>
-              <Card.Text>Date Trip</Card.Text>
+              <Card.Text style={{ textAlign: "center" }}>Date Trip</Card.Text>
               <span class="d-inline-block btn float-left">
                 <Image
                   style={{ maxWidth: "100rem", marginBottom: "2rem" }}
@@ -157,9 +191,20 @@ const Home = () => (
         </p>
         <Row>
           <Col>
-            <h5 style={{ textAlign: "left", color: "BLUE" }}>
-              IDR. 12,398,000 / Person
-            </h5>
+            <span>
+              <h5
+                style={{
+                  textAlign: "left",
+                  color: "orange",
+                  display: "inline",
+                }}
+              >
+                <b>IDR. 12,398,000</b>
+              </h5>
+              <h5 style={{ display: "inline" }}>
+                <b>&nbsp; / Person</b>
+              </h5>
+            </span>
           </Col>
 
           <Col>
@@ -180,7 +225,7 @@ const Home = () => (
                 }}
                 controlId="formBasicEmail"
               >
-                <Form.Control type="number" placeholder="#" />
+                <Form.Control type="text" />
               </Form.Group>{" "}
               <Image
                 style={{
@@ -198,14 +243,12 @@ const Home = () => (
       <Container>
         <Row>
           <Col>
-            <h5 style={{ textAlign: "left" }}>
-            Total:            
-            </h5>
+            <h5 style={{ textAlign: "left" }}>Total:</h5>
           </Col>
 
           <Col>
-          <h5 style={{ textAlign: "right", color: "BLUE" }}>
-              IDR. 12,398,000
+            <h5 style={{ textAlign: "right", color: "orange" }}>
+              <b>IDR. 12,398,000</b>
             </h5>
           </Col>
         </Row>
@@ -213,9 +256,13 @@ const Home = () => (
       <hr></hr>
       <Container>
         <Row>
-          <Col style={{ textAlign: "right" }} >
-          <Button variant="warning" style={{backgroundColor:"#FFAF00"}} >Book Now</Button>{' '}
-            </Col>
+          <Col style={{ textAlign: "right" }}>
+            <Link to="/IncomeTrip">
+              <Button variant="warning" style={{ backgroundColor: "#FFAF00" }}>
+                Book Now
+              </Button>{" "}
+            </Link>
+          </Col>
         </Row>
       </Container>
     </Container>

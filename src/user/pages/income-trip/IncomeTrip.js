@@ -1,10 +1,10 @@
 import React from "react";
 import { MemoryRouter, Switch, Route } from "react-router-dom";
-import DestImg from "../../../images/Dest-Melbourne-1.jpg";
+// import DestImg from "../../../images/Dest-Melbourne-1.png";
+import DestImg from "../../../images/Dest-Melbourne-1.png";
 import Icons from "../../../icons/BuildingIcon.png";
 import MinusIcon from "../../../icons/Minus.png";
 import PlusIcon from "../../../icons/Plus.png";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import {
   Button,
@@ -17,8 +17,7 @@ import {
   FormControl,
   Image,
 } from "react-bootstrap";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import { LinkContainer } from "react-router-bootstrap/lib/ReactRouterBootstrap";
+import { Link } from "react-router-dom";
 import Dest1 from "../../../images/Dest1.png";
 import Dest2 from "../../../images/Dest2.png";
 import Dest3 from "../../../images/Dest3.png";
@@ -38,13 +37,21 @@ const Home = () => (
     <Container className="p-3" style={{ minHeight: "50rem" }}>
       <Container>
         <Row>
-        <Col style={{ textAlign: "left" }} >
-         <h1>Group Tour</h1>
-            </Col>
-          <Col style={{ textAlign: "right" }} >
-          <Button href="/AddTrip" variant="warning" style={{backgroundColor:"#FFAF00"}} size="sm" >Add Trip</Button>{' '}
-
-            </Col>
+          <Col style={{ textAlign: "left" }}>
+            <h1>Incoming Trip</h1>
+          </Col>
+          <Col style={{ textAlign: "right" }}>
+            {" "}
+            <Link to="/AddTrip">
+              <Button
+                variant="warning"
+                style={{ backgroundColor: "#FFAF00" }}
+                size="sm"
+              >
+                Add Trip
+              </Button>
+            </Link>
+          </Col>
         </Row>
       </Container>
       <Row>
