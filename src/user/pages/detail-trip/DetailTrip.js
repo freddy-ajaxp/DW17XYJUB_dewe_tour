@@ -1,9 +1,11 @@
-import React from "react";
-import { MemoryRouter, Switch, Route } from "react-router-dom";
-import DestImg from "../../../images/Dest-Melbourne-1.png";
-import DestImg2 from "../../../images/Dest-Melbourne-2.png";
-import DestImg3 from "../../../images/Dest-Melbourne-3.png";
-import DestImg4 from "../../../images/Dest-Melbourne-4.png";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Link,
+  useParams,
+  useHistory,
+} from "react-router-dom";
 import BuildingIcon from "../../../icons/BuildingIcon.png";
 import CalendarIcon from "../../../icons/CalendarIcon.png";
 import TimeIcon from "../../../icons/TimeIcon.png";
@@ -12,7 +14,6 @@ import PlaneIcon from "../../../icons/PlaneIcon.png";
 import MinusIcon from "../../../icons/Minus.png";
 import PlusIcon from "../../../icons/Plus.png";
 import Container from "react-bootstrap/Container";
-import { Link } from "react-router-dom";
 import {
   Button,
   CardGroup,
@@ -20,253 +21,404 @@ import {
   Row,
   Col,
   Form,
-  InputGroup,
   Image,
 } from "react-bootstrap";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import { LinkContainer } from "react-router-bootstrap/lib/ReactRouterBootstrap";
+import ModalLogin from "../../components/login/ModalLogin";
+import "./DetailTrip.css";
 
-const Homee = () => <span>Home</span>;
+const Home = (props) => {
+  let history = useHistory();
+  const { id } = useParams();
+  const [dataTrip, setdataTrip] = useState({});
+  const [Qty, setQty] = useState(0);
+  const [totalHarga, setTotalHarga] = useState(0);
+  const [form, setForm] = useState({});
+  const [modalShow, setModalShow] = useState(false);
+  const [kapasitas, setKapasitas] = useState({ cukup: true, sisa: 0 });
+  const onChange = (e) => {
+    if (e.target.value > 0 && e.target.value < 21) setQty(e.target.value);
+  };
 
-const About = () => <span>About</span>;
+  const bookClickHandler = async (e) => {
+    e.preventDefault();
+    if (localStorage.getItem("id")) {
+      await setForm({
+        counterQty: Qty,
+        total: totalHarga,
+        status: "Waiting Payment",
+        attachment: "",
+        tripId: id,
+        // userId: dataTrip.user_id,
+        userId: localStorage.getItem("id"),
+      });
+    } else {
+      setModalShow(true);
+    }
+  };
+  const sendForm = async (e) => {
+    try {
+      await axios.post("http://localhost:5001/api/transaction", form, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
+      history.push({
+        pathname: "/Payment",
+        state: { userId: localStorage.getItem("id") },
+      });
+    } catch (err) {
+      console.log("error saat booking", err);
+    }
+  };
+  const getTrip = async () => {
+    try {
+      const result = await axios.get(`http://localhost:5001/api/trip/${id}`);
+      const { detailTrip } = result.data.data;
+      setdataTrip(detailTrip);
+      const takenTrip = detailTrip.Transaction?.takenTrip || 0;
+      let sisaTrip = detailTrip.quota - takenTrip;
+      await setKapasitas({ cukup: true, sisa: sisaTrip });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-const Users = () => <span>Users</span>;
-// const urlGambar = '';
-const Home = () => (
-  //   <MemoryRouter>
-  <React.Fragment>
-    <Container className="p-3">
-      <h1 style={{ textAlign: "left" }}>6D/4N Fun Tassie Vacation + Sydney</h1>
-      <h3 style={{ textAlign: "left" }}>Australia</h3>
+  const handleChange = async (action) => {
+    if (action === "kurang" && Qty > 1) {
+      await setQty((prevQty) => Qty - 1);
+      await setTotalHarga(dataTrip.price * Qty);
+      await setKapasitas({ ...kapasitas, cukup: true });
+    } else if (action === "tambah" && Qty < kapasitas.sisa) {
+      await setQty((prevQty) => Qty + 1);
+      await setTotalHarga(dataTrip.price * Qty);
+    } else if (Qty === kapasitas.sisa) {
+      console.log("idketik")
+      setKapasitas({ ...kapasitas, cukup: false });
+    }
+  };
+  const kurangiQty = async () => {
+    if (Qty > 1) {
+      setQty((prevQty) => Qty - 1);
+      setTotalHarga(dataTrip.price * Qty);
+    }
+  };
+  const tambahQty = async () => {
+    if (Qty < 10) {
+      setQty((prevQty) => Qty + 1);
+      setTotalHarga(dataTrip.price * Qty);
+    }
+  };
+  useEffect(() => {
+    getTrip();
+  }, []);
 
-      <Container>
-        <Row>
-          <Col>
-            <Image
-              style={{ width: "100%", paddingBottom: "1rem" }}
-              src={DestImg}
-              fluid
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Image
-              style={{ width: "100%", marginBottom: "2rem" }}
-              src={DestImg2}
-              fluid
-            />
-          </Col>
-          <Col>
-            <Image
-              style={{ width: "100%", marginBottom: "2rem" }}
-              src={DestImg3}
-              fluid
-            />
-          </Col>
-          <Col>
-            <Image
-              style={{ width: "100%", marginBottom: "2rem" }}
-              src={DestImg4}
-              fluid
-            />
-          </Col>
-        </Row>
-      </Container>
+  useEffect(() => {
+    if (form.total) {
+      sendForm();
+    }
+  }, [form]);
 
-      <Container>
-        <h4 style={{ textAlign: "left" }}>Information Trip</h4>
-      </Container>
-      <Container>
-        <CardGroup>
-          <Card
-            style={{
-              margin: "20px",
-              border: "none",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Card.Body>
-              <Card.Text style={{ textAlign: "center" }}>
-                {" "}
-                Accomodation
-              </Card.Text>
-              <span class="d-inline-block btn float-left">
-                <Image
-                  style={{ maxWidth: "100rem", marginBottom: "2rem" }}
-                  src={BuildingIcon}
-                />
-              </span>
-              <Card.Text>Hotel 4 Nights</Card.Text>
-            </Card.Body>
-          </Card>
-          <Card
-            style={{
-              margin: "20px",
-              border: "none",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Card.Body>
-              <Card.Text style={{ textAlign: "center" }}>
-                Transportation
-              </Card.Text>
-              <span class="d-inline-block btn float-left">
-                <Image
-                  style={{ maxWidth: "100rem", marginBottom: "2rem" }}
-                  src={PlaneIcon}
-                />
-              </span>
-              <Card.Text>Qatar Airways</Card.Text>
-            </Card.Body>
-          </Card>
-          <Card
-            style={{
-              margin: "20px",
-              border: "none",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Card.Body>
-              <Card.Text style={{ textAlign: "center" }}>Eat</Card.Text>
-              <span class="d-inline-block btn float-left">
-                <Image
-                  style={{ maxWidth: "100rem", marginBottom: "2rem" }}
-                  src={MealIcon}
-                />
-              </span>
-              <Card.Text>Included as ltinerary</Card.Text>
-            </Card.Body>
-          </Card>
-          <Card
-            style={{
-              margin: "20px",
-              border: "none",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Card.Body>
-              <Card.Text style={{ textAlign: "center" }}>Duration</Card.Text>
-              <span class="d-inline-block btn float-left">
-                <Image
-                  style={{ maxWidth: "100rem", marginBottom: "2rem" }}
-                  src={TimeIcon}
-                />
-              </span>
-              <Card.Text>6 Day 4 Night</Card.Text>
-            </Card.Body>
-          </Card>
-          <Card
-            style={{
-              margin: "20px",
-              border: "none",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Card.Body>
-              <Card.Text style={{ textAlign: "center" }}>Date Trip</Card.Text>
-              <span class="d-inline-block btn float-left">
-                <Image
-                  style={{ maxWidth: "100rem", marginBottom: "2rem" }}
-                  src={CalendarIcon}
-                />
-              </span>
-              <Card.Text>26 August 2020</Card.Text>
-            </Card.Body>
-          </Card>
-        </CardGroup>
-      </Container>
-      <Container>
-        <h6 style={{ textAlign: "left" }}>Description</h6>
-        <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book. It has survived not only
-          five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop publishing software like Aldus PageMaker
-          including versions of Lorem Ipsum.
-        </p>
-        <Row>
-          <Col>
-            <span>
-              <h5
-                style={{
-                  textAlign: "left",
-                  color: "orange",
-                  display: "inline",
-                }}
-              >
-                <b>IDR. 12,398,000</b>
-              </h5>
-              <h5 style={{ display: "inline" }}>
-                <b>&nbsp; / Person</b>
-              </h5>
-            </span>
-          </Col>
+  useEffect(() => {
+    if (dataTrip.ImageTrip && dataTrip.ImageTrip.id) {
+    }
+  }, [dataTrip]);
 
-          <Col>
-            <Form>
+  useEffect(() => {
+    setTotalHarga(dataTrip.price * Qty);
+  }, [Qty, dataTrip]);
+
+  return (
+    //   <MemoryRouter>
+    <React.Fragment>
+      <Container className="p-3">
+        <h1 style={{ textAlign: "left" }}>{dataTrip.title}</h1>
+        <h3 style={{ textAlign: "left" }}>{dataTrip?.Country?.nama_negara}</h3>
+        <br />
+        <Container>
+          <Row>
+            <Col>
               <Image
-                style={{
-                  float: "right",
-                  maxWidth: "100rem",
-                  marginBottom: "2rem",
-                }}
-                src={PlusIcon}
+                style={{ width: "100rem", paddingBottom: "1rem" }}
+                src={dataTrip.image}
+                fluid
               />
-              <Form.Group
-                style={{
-                  float: "right",
-                  maxWidth: "5rem",
-                  marginBottom: "2rem",
-                }}
-                controlId="formBasicEmail"
-              >
-                <Form.Control type="text" />
-              </Form.Group>{" "}
+            </Col>
+          </Row>
+          <Row>
+            <Col>
               <Image
-                style={{
-                  float: "right",
-                  maxWidth: "100rem",
-                  marginBottom: "2rem",
-                }}
-                src={MinusIcon}
+                className="etalase-sub"
+                src={dataTrip.image_trip_2}
+                fluid
               />
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-      <hr></hr>
-      <Container>
-        <Row>
-          <Col>
-            <h5 style={{ textAlign: "left" }}>Total:</h5>
-          </Col>
+            </Col>
+            <Col>
+              <Image
+                className="etalase-sub"
+                src={dataTrip.image_trip_3}
+                fluid
+              />
+            </Col>
+            <Col>
+              <Image
+                className="etalase-sub"
+                src={dataTrip.image_trip_4}
+                fluid
+              />
+            </Col>
+          </Row>
+        </Container>
 
-          <Col>
-            <h5 style={{ textAlign: "right", color: "orange" }}>
-              <b>IDR. 12,398,000</b>
-            </h5>
-          </Col>
-        </Row>
+        <Container>
+          <h4 style={{ textAlign: "left" }}>Information Trip</h4>
+        </Container>
+        <Container>
+          <CardGroup>
+            <Card
+              style={{
+                margin: "20px",
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Card.Body style={{}}>
+                <Card.Text style={{ fontSize: "90%", textAlign: "center" }}>
+                  Accomodation
+                </Card.Text>
+                <span class="d-inline-block btn float-left">
+                  <Image
+                    style={{ maxWidth: "100rem", marginBottom: "2rem" }}
+                    src={BuildingIcon}
+                  />
+                </span>
+                <Card.Text style={{ fontSize: "80%", textAlign: "center" }}>
+                  <b>{dataTrip.accomodation}</b>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card
+              style={{
+                margin: "20px",
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Card.Body>
+                <Card.Text style={{ fontSize: "90%", textAlign: "center" }}>
+                  Transportation
+                </Card.Text>
+                <span class="d-inline-block btn float-left">
+                  <Image
+                    style={{ maxWidth: "100rem", marginBottom: "2rem" }}
+                    src={PlaneIcon}
+                  />
+                </span>
+                <Card.Text style={{ fontSize: "80%", textAlign: "center" }}>
+                  <b>{dataTrip.transportation}</b>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card
+              style={{
+                margin: "20px",
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Card.Body>
+                <Card.Text style={{ fontSize: "90%", textAlign: "center" }}>
+                  Eat
+                </Card.Text>
+                <span class="d-inline-block btn float-left">
+                  <Image
+                    style={{ maxWidth: "100rem", marginBottom: "2rem" }}
+                    src={MealIcon}
+                  />
+                </span>
+                <Card.Text style={{ fontSize: "80%", textAlign: "center" }}>
+                  <b>{dataTrip.eat}</b>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card
+              style={{
+                margin: "20px",
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Card.Body>
+                <Card.Text style={{ fontSize: "90%", textAlign: "center" }}>
+                  Duration
+                </Card.Text>
+                <span class="d-inline-block btn float-left">
+                  <Image
+                    style={{ maxWidth: "100rem", marginBottom: "2rem" }}
+                    src={TimeIcon}
+                  />
+                </span>
+                <Card.Text style={{ fontSize: "80%", textAlign: "center" }}>
+                  <b>
+                    {dataTrip.day} Day {dataTrip.night} Night
+                  </b>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card
+              style={{
+                margin: "20px",
+                border: "none",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Card.Body>
+                <Card.Text style={{ fontSize: "90%", textAlign: "center" }}>
+                  Date Trip
+                </Card.Text>
+                <span class="d-inline-block btn float-left">
+                  <Image
+                    style={{ maxWidth: "100rem", marginBottom: "2rem" }}
+                    src={CalendarIcon}
+                  />
+                </span>
+
+                <Card.Text style={{ fontSize: "80%", textAlign: "" }}>
+                  <b>{`${dataTrip.date_trip}`.replace("-", " - ")}</b>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </CardGroup>
+        </Container>
+        <Container>
+          <h4 style={{ textAlign: "left" }}>Description</h4>
+          <p>{dataTrip.description}</p>
+          <Row>
+            <Col>
+              <span>
+                <h5
+                  style={{
+                    textAlign: "left",
+                    color: "orange",
+                    display: "inline",
+                  }}
+                >
+                  <b>
+                    {"IDR. "}{" "}
+                    {Intl.NumberFormat("de-ID").format(dataTrip.price)}
+                  </b>
+                </h5>
+                <h5 style={{ display: "inline" }}>
+                  <b>&nbsp;/ Person</b>
+                </h5>
+              </span>
+            </Col>
+
+            <Col>
+            {(localStorage.getItem('admin') ==='true' ) ? null :
+              <Form>
+                <Image
+                  // onClick={tambahQty}
+                  // onClick={() => {
+                  //   Qty < 20 && setQty(Qty + 1);
+                  // }}
+                  onClick={() => {
+                    handleChange("tambah");
+                  }}
+                  style={{
+                    float: "right",
+                    maxWidth: "100rem",
+                    marginBottom: "2rem",
+                  }}
+                  src={PlusIcon}
+                />
+                <Form.Group
+                  style={{
+                    float: "right",
+                    maxWidth: "5rem",
+                    marginBottom: "2rem",
+                  }}
+                >
+                  {/* <Form.Control
+                    type="text"
+                    value={Qty}
+                    onChange={(e) => onChange(e)}
+                  ></Form.Control> */}
+                  <div className="orderQuantity">{Qty}</div>
+                </Form.Group>{" "}
+                <Image
+                  // onClick={kurangiQty}
+                  // onClick={() => {
+                  //   Qty > 1 && setQty(Qty - 1);
+                  // }}
+                  onClick={() => {
+                    handleChange("kurang");
+                  }}
+                  style={{
+                    float: "right",
+                    maxWidth: "100rem",
+                    marginBottom: "2rem",
+                  }}
+                  src={MinusIcon}
+                />
+              </Form>
+            }
+            </Col>
+          </Row>
+          <Row>
+            <Col className="row justify-content-end">
+              <div className="message-capacity">
+                {kapasitas.cukup ? null : (
+                  <p>maaf, hanya tersisa  {kapasitas.sisa} slot</p>
+                )}
+              </div>
+            </Col>
+          </Row>
+        </Container>
+        <hr></hr>
+        {(localStorage.getItem('admin') ==='true' ) ? null :
+        <Form onSubmit={bookClickHandler}>
+          <Container>
+            <Row>
+              <Col>
+                <h5 style={{ textAlign: "left" }}>Total:</h5>
+              </Col>
+              <Col>
+                <h5 style={{ textAlign: "right", color: "orange" }}>
+                  <b>
+                    {"IDR. "}
+                    {Intl.NumberFormat("de-ID").format(totalHarga)}
+                  </b>
+                </h5>
+              </Col>
+            </Row>
+          </Container>
+          <hr></hr>
+          <Container>
+            <Row>
+              <Col style={{ textAlign: "right" }}>
+                <Link>
+                  <Button
+                    variant="warning"
+                    style={{ backgroundColor: "#FFAF00" }}
+                    type="submit"
+                    onClick={bookClickHandler}
+                  >
+                    Book Now
+                  </Button>{" "}
+                </Link>
+              </Col>
+            </Row>
+          </Container>
+        </Form>
+        }
       </Container>
-      <hr></hr>
-      <Container>
-        <Row>
-          <Col style={{ textAlign: "right" }}>
-            <Link to="/IncomeTrip">
-              <Button variant="warning" style={{ backgroundColor: "#FFAF00" }}>
-                Book Now
-              </Button>{" "}
-            </Link>
-          </Col>
-        </Row>
-      </Container>
-    </Container>
-  </React.Fragment>
-);
+      <ModalLogin
+        modalShow={modalShow}
+        setModalShow={setModalShow}
+      ></ModalLogin>
+    </React.Fragment>
+  );
+};
 
 export default Home;

@@ -1,272 +1,342 @@
-import React from "react";
+import axios from "axios";
+import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import DWT from "../../../icons/DWT2.png";
 import BuktiPembayaranImg from "../../../images/bukti.png";
-import ColoredLine from "../../components/shared/ColoredLine";
-import {
-  Button,
-  Table,
-  Row,
-  Col,
-  Form,
-  InputGroup,
-  FormControl,
-  Image,
-} from "react-bootstrap";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import { LinkContainer } from "react-router-bootstrap/lib/ReactRouterBootstrap";
+import { Button, Row, Col, Modal, Image } from "react-bootstrap";
+import pleaseUpload from "../../../icons/please-upload.png"
 import "./payment.css";
+import Navbar from "../../components/navbar/Navbar";
 
-const Payment = () => (
-  //   <MemoryRouter>
-  <React.Fragment>
-    <Container className="p-3">
-      <Container className="paymentdiv">
-        {/* ROW 1 */}
+const Payment = () => {
+  const [show, setShowLogin] = useState(false); //untuk show modal konfirmasi, abaikan nama 'login'
+  const [transactions, setTransactions] = useState([]); //data tiap transaksi
+  const [profilUser, setProfilUser] = useState({}); // data user tiap transaksi
+  const [formUpdateTrans, setFormUpdateTrans] = useState({
+    status: "",
+    attachment: "",
+  });
+  const [imgDitampilkan, setImgDitampilkan] = useState(); // data user tiap transaksi
+  const [isImageUploaded, setImageUploaded] = useState(false); // checker jika gambar telah dipilih
+  const [transIdModal, setTransIdModal] = useState(); //id trans to pass to modal
+  const userId = JSON.parse(localStorage.getItem("id"));
 
-        <Row>
-          <Col style={{}} xs={12} md={9}>
-            <Image style={{ width: "200px" }} src={DWT} fluid />
-          </Col>
-          <Col
-            xs={12}
-            md={3}
-            className="justify-content-end"
-            style={{ textAlign: "center" }}
-          >
-            <h4>
-              <b>Booking</b>
-            </h4>
-            <p>Saturday, 22 Juy 2020</p>
-          </Col>
-        </Row>
+  // const location = useLocation();
+  const confirmationModal = () => {
+    show ? setShowLogin(false) : setShowLogin(true);
+    getTransactions();
+  };
 
-        {/* ROW 2 */}
-        <Row>
-          <Col xs={12} md={5} style={{}}>
+  const onChangePicture = (e) => {
+    if (e.target.files[0]) {
+      setFormUpdateTrans({ ...formUpdateTrans, attachment: e.target.files[0] });
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setImgDitampilkan(reader.result);
+      }); 
+      reader.readAsDataURL(e.target.files[0]);
+      // setImgDitampilkan(e.target.files[0]);
+      setImageUploaded(true);
+
+    }
+  };
+
+  const clickPay = async (idTransaksi) => {
+    if (isImageUploaded) {
+      setTransIdModal(idTransaksi);
+      show ? setShowLogin(false) : setShowLogin(true);
+      const formData = new FormData();
+      formData.append("idUser", localStorage.getItem("id"));
+      formData.append("idTransaksi", idTransaksi);
+      formData.append("status", "Waiting Approval");
+      formData.append("attachment", formUpdateTrans.attachment);
+      const token = JSON.parse(localStorage.getItem("token"));
+      const requestOptions = {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+        body: formData,
+      };
+      try {
+        fetch(
+          `http://localhost:5001/api/transaction/pay/${idTransaksi}`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((data) => console.log("return hasil", data));
+      } catch (error) {
+        console.log("respond axios", error);
+      }
+    }
+  };
+
+  const getTransactions = async () => {
+    try {
+      const result = await axios({
+        method: "GET",
+        url: `http://localhost:5001/api/transactions/${userId}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
+      const resultTransactions = result.data.data.transactions;
+      setTransactions(resultTransactions);
+      console.log("hasil transaction", resultTransactions)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const result = await axios({
+        method: "GET",
+        url: `http://localhost:5001/api/user/${userId}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      });
+      const resultUser = result.data.data.detailUser;
+      setProfilUser(resultUser);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const listTrips = transactions.map((dataTrip, index) => {
+    return (
+      <>
+        <Container className="paymentdiv">
+          {/* ROW 1 */} 
+          <Row>
+            <Col style={{}} xs={12} md={9}>
+              <Image style={{ width: "200px" }} src={DWT} fluid />
+            </Col>
+            <Col
+              xs={12}
+              md={3}
+              className="justify-content-end"
+              style={{ textAlign: "center" }}
+            >
+              <h4>
+                <b>Booking</b>
+              </h4>
+              <p>{dataTrip.Trip.date_trip}</p>
+            </Col>
+          </Row>
+          {/* ROW 2 */}
+          <Row>
+            <Col xs={12} md={5} style={{}}>
+              <Container>
+                <Row style={{}}>
+                  <h3>{dataTrip.Trip.title}</h3>{" "}
+                </Row>
+              </Container>
+              <Container>
+                <Row>{dataTrip.Trip.Country.nama_negara}</Row>
+              </Container>
+              <Container>
+                <Row>
+                  <p className="Payment">{dataTrip.status}</p>
+                </Row>
+              </Container>
+            </Col>
+            <Col xs={12} md={2} style={{}}>
+              <Container style={{}}>
+                <Row style={{}}>Date Trip</Row>
+                <Row>{dataTrip.Trip.date_trip}</Row>
+              </Container>
+              <br></br>
+              <Container style={{}}>
+                <Row style={{}}>Accomodation</Row>
+                <Row>Hotel 4 night</Row>
+              </Container>
+            </Col>
+            <Col xs={12} md={2} style={{}}>
+              <Container style={{}}>
+                <Row style={{}}>Duration</Row>
+                <Row>{`${dataTrip.Trip.day} Day ${dataTrip.Trip.night} night`}</Row>
+              </Container>
+              <br></br>
+              <Container style={{}}>
+                <Row style={{}}>Transportation</Row>
+                <Row>{dataTrip.Trip.transportation}</Row>
+              </Container>
+            </Col>
+            <Col xs={12} md={3} style={{}}>
+              <Container style={{ textAlign: "center" }}>
+                <Image
+                  style={{ maxHeight: "138px" }}
+                  // src={imgDitampilkan}
+                  src={`http://localhost:5001/uploads/${dataTrip.attachment}`}
+                  onError={(e)=>{e.target.onerror = null; e.target.src=pleaseUpload}}
+                  onChange={onChangePicture}
+                  fluid
+                />
+                {dataTrip.status == "Waiting Payment" && (
+                  <>
+                    <input
+                      type="file"
+                      name="image"
+                      style={{ width: "250px" }}
+                      onChange={onChangePicture}
+                    />
+                    <p>upload payment</p>
+                  </>
+                )}
+              </Container>
+            </Col>
+          </Row>
+          {/* ROW 3 */}
+          <Row>
+            {/* START */}
             <Container>
-              <Row style={{}}>
-                <h3>6D/4N Fun Tassie Vacations</h3>{" "}
-              </Row>
-            </Container>
-            <Container>
-              <Row>Australia</Row>
-            </Container>
-            <Container>
+              {/* Stack the columns on mobile by making one full-width and the other half-width */}
               <Row>
-                <p className="Payment">Waiting Payment</p>
+                <Col xs={1} md={1} lg={1}>
+                  <b>No</b>
+                </Col>
+                <Col xs={2} md={2} lg={2}>
+                  <b>Full Name</b>
+                </Col>
+                <Col xs={2} md={2} lg={2}>
+                  <b>Gender</b>
+                </Col>
+                <Col xs={2} md={2} lg={2}>
+                  <b>Phone</b>
+                </Col>
               </Row>
+              <hr></hr>
+              <Row>
+                <Col xs={1} md={1} lg={1}>
+                  1
+                </Col>
+                <Col xs={2} md={2} lg={2}>
+                  {profilUser.fullname}
+                </Col>
+                <Col xs={2} md={2} lg={2}>
+                {profilUser.gender}
+                </Col>
+                <Col xs={2} md={2} lg={2}>
+                  {profilUser.phone}
+                </Col>
+                <Col
+                  xs={1}
+                  md={1}
+                  lg={2}
+                  style={{ backgroundColor: "", textAlign: "center" }}
+                >
+                  <b>Qty</b>
+                </Col>
+                <Col
+                  xs={1}
+                  md={1}
+                  lg={1}
+                  style={{ backgroundColor: "", textAlign: "right" }}
+                >
+                  <b>:</b>
+                </Col>
+                <Col
+                  xs={2}
+                  md={2}
+                  lg={2}
+                  style={{ backgroundColor: "", textAlign: "center" }}
+                >
+                  <b>{dataTrip.counterQty}</b>
+                </Col>
+              </Row>
+              <hr></hr>
+              <Row>
+                <Col xs={7} md={7} lg={7}></Col>
+                <Col
+                  xs={1}
+                  md={1}
+                  lg={2}
+                  style={{ backgroundColor: "", textAlign: "center" }}
+                >
+                  <b>Total</b>
+                </Col>
+                <Col
+                  xs={1}
+                  md={1}
+                  lg={1}
+                  style={{ backgroundColor: "", textAlign: "right" }}
+                >
+                  <b>:</b>
+                </Col>
+                <Col
+                  xs={2}
+                  md={2}
+                  lg={2}
+                  style={{ backgroundColor: "", textAlign: "center" }}
+                >
+                  <b style={{ color: "red" }}>
+                    IDR. {Intl.NumberFormat("de-ID").format(dataTrip.total)}
+                  </b>
+                </Col>
+              </Row>
+              <br></br>
             </Container>
-          </Col>
-          <Col xs={12} md={2} style={{}}>
-            <Container style={{}}>
-              <Row style={{}}>Date Trip</Row>
-              <Row>20 August 2020</Row>
-            </Container>
-            <br></br>
-            <Container style={{}}>
-              <Row style={{}}>Acco</Row>
-              <Row>Hotel 4 night</Row>
-            </Container>
-          </Col>
-          <Col xs={12} md={2} style={{}}>
-            <Container style={{}}>
-              <Row style={{}}>Duration</Row>
-              <Row>6 Day 4 night</Row>
-            </Container>
-            <br></br>
-            <Container style={{}}>
-              <Row style={{}}>Transportation</Row>
-              <Row>Cathar Airline</Row>
-            </Container>
-          </Col>
-
-          <Col xs={12} md={3} style={{}}>
-            <Container style={{ textAlign: "center" }}>
-              <Image
-                style={{ maxHeight: "138px" }}
-                src={BuktiPembayaranImg}
-                fluid
-              />
-              <p style={{}}>upload payment proof</p>
-            </Container>
-          </Col>
-        </Row>
-
-        {/* ROW 3 */}
-        <Row>
-          {/* <Table responsive borderless  hover size="sm" >
-            <thead className="text-center">
-              <tr>
-                <th>No</th>
-                <th>Full Name</th>
-                <th>Gender</th>
-                <th>Phone</th>
-              </tr>
-            </thead>
-            <tbody style={{ textAlign: "center"}}>
-              <tr>
-                <td>1</td>
-                <td>User 1</td>
-                <td>6D/4N Fun Tassie Vaca ...</td>
-                <td>
-                  <p style={{ color: "red", textAlign: "center" }}>
-                    {" "}
-                    <a
-                      style={{ textAlign: "center" }}
-                      href="https://www.pakaiatm.com/wp-content/uploads/2020/03/Contoh-Bukti-Transfer-BRI-Asli-atau-Palsu.jpg"
-                      target="_blank"
-                    >
-                      bukti transaksi
-                    </a>
-                  </p>
-                </td>
-                <td>
-                  <p style={{ color: "orange", textAlign: "center" }}>
-                    Overdue
-                  </p>
-                </td>
-
-                <td>
-                  <a href="/DetailTrip" title=""></a>
-                </td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>User 1</td>
-                <td>6D/4N Fun Tassie Vaca ...</td>
-                <td>
-                  <p style={{ color: "red", textAlign: "center" }}>
-                    {" "}
-                    <a
-                      style={{ textAlign: "center" }}
-                      href="https://www.pakaiatm.com/wp-content/uploads/2020/03/Contoh-Bukti-Transfer-BRI-Asli-atau-Palsu.jpg"
-                      target="_blank"
-                    >
-                      bukti transaksi
-                    </a>
-                  </p>
-                </td>
-                <td>
-                  <p style={{ color: "orange", textAlign: "center" }}>
-                    Overdue
-                  </p>
-                </td>
-
-                <td>
-                  <a href="/DetailTrip" title=""></a>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-         */}
-
-          {/* START */}
-          <Container>
-            {/* Stack the columns on mobile by making one full-width and the other half-width */}
+          </Row>
+        </Container>
+        <br></br>
+        <Container>
+          {dataTrip.status == "Waiting Payment" && (
             <Row>
-              <Col xs={1} md={1} lg={1}>
-                <b>No</b>
-              </Col>
-              <Col xs={2} md={2} lg={2}>
-                <b>Full Name</b>
-              </Col>
-              <Col xs={2} md={2} lg={2}>
-                <b>Gender</b>
-              </Col>
-              <Col xs={2} md={2} lg={2}>
-                <b>Phone</b>
+              <Col lg={10} />
+              <Col style={{ textAlign: "right" }}>
+                <Button
+                  block
+                  variant="warning"
+                  onClick={() => {
+                    return clickPay(dataTrip.id);
+                  }}
+                >
+                  {"  Bayar  "}
+                </Button>{" "}
               </Col>
             </Row>
-            <hr></hr>
-            <Row>
-              <Col xs={1} md={1} lg={1}>
-                1
-              </Col>
-              <Col xs={2} md={2} lg={2}>
-                Nama seseorang
-              </Col>
-              <Col xs={2} md={2} lg={2}>
-                Gender
-              </Col>
-              <Col xs={2} md={2} lg={2}>
-                08123182819
-              </Col>
-              <Col
-                xs={1}
-                md={1}
-                lg={2}
-                style={{ backgroundColor: "", textAlign: "center" }}
-              >
-                <b>Qty</b>
-              </Col>
-              <Col
-                xs={1}
-                md={1}
-                lg={1}
-                style={{ backgroundColor: "", textAlign: "right" }}
-              >
-                <b>:</b>
-              </Col>
-              <Col
-                xs={2}
-                md={2}
-                lg={2}
-                style={{ backgroundColor: "", textAlign: "center" }}
-              >
-                <b>1</b>
-              </Col>
-            </Row>
+          )}
+        </Container>
+        <br></br>
+      </>
+    );
+  });
 
-            <hr></hr>
-            <Row>
-              <Col xs={7} md={7} lg={7}></Col>
-              <Col
-                xs={1}
-                md={1}
-                lg={2}
-                style={{ backgroundColor: "", textAlign: "center" }}
-              >
-                <b>Total</b>
-              </Col>
-              <Col
-                xs={1}
-                md={1}
-                lg={1}
-                style={{ backgroundColor: "", textAlign: "right" }}
-              >
-                <b>:</b>
-              </Col>
-              <Col
-                xs={2}
-                md={2}
-                lg={2}
-                style={{ backgroundColor: "", textAlign: "center" }}
-              >
-                <b style={{ color: "red" }}>IDR. 4,500,000</b>
-              </Col>
-            </Row>
-            <br></br>
-            {/* Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop */}
-            {/* Columns are always 50% wide, on mobile and desktop */}
-          </Container>
-        </Row>
-      </Container>
+  useEffect(() => {
+    getTransactions();
+    getUser();
+  }, []);
 
-      <br></br>
-      <Container>
-        <Row>
-          <Col style={{ textAlign: "right" }}>
-            <Button variant="warning" style={{}}>
-              Book Now
-            </Button>{" "}
-          </Col>
-        </Row>
-      </Container>
-    </Container>
-  </React.Fragment>
-
-  //   </MemoryRouter>
-);
-
+  return (
+    <React.Fragment>
+    <Navbar isImageUploaded={isImageUploaded} style={{zIndex:'1'}}/>
+    <div style={{minHeight:"5rem"}} />
+    <div style={{zIndex:'-1'}}>
+      {listTrips}
+      </div>
+      <Modal show={show} onHide={confirmationModal}>
+        <Link
+          to={{
+            pathname: `/PaymentPending/${transIdModal}`,
+            propsTrip: { idTransaction: transIdModal },
+          }}
+        >
+          <div>
+            <p style={{ textAlign: "center" }}>
+              <h2>
+                Your payment will be confirmed within 1 x 24 hours <br />
+                To see orders click thank you
+              </h2>
+            </p>
+          </div>
+        </Link>
+      </Modal>
+    </React.Fragment>
+  );
+};
 export default Payment;

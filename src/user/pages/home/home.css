@@ -1,145 +1,127 @@
-/*!
- * Start Bootstrap - Landing Page v5.0.8 (https://startbootstrap.com/themes/landing-page)
- * Copyright 2013-2020 Start Bootstrap
- * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-landing-page/blob/master/LICENSE)
- */
+body {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 
- body {
-    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-  
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700;
-  }
-  
-  header.masthead {
-    position: relative;
-    background-color: #343a40;
-    /* background: url("../../../images/logo192.png") no-repeat center center; */
-    background-size: cover;
-    padding-top: 8rem;
-    padding-bottom: 8rem;
-  }
-  
-  header.masthead .overlay {
-    position: absolute;
-    background-color: #212529;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0.3;
-  }
-  
-  header.masthead h1 {
-    font-size: 2rem;
-  }
-  
-  .jumbotron{
-    /* background-image: url('https://img2.pngdownload.id/20180326/htq/kisspng-page-header-web-banner-header-5ab8e746ca5d97.1222393215220672708289.jpg'); */
-    background-size: cover;
-    height: 100%;
-  }
+.outer {
+  overflow: hidden;
+  position: relative;
+}
+.home-header {
+  position: relative;
+  /* width: 1315px; */
+  height: 100%;
+  left: 93px;
+  top: 0;
 
-  @media (min-width: 768px) {
-    header.masthead {
-      padding-top: 12rem;
-      padding-bottom: 12rem;
-    }
-    header.masthead h1 {
-      font-size: 3rem;
-    }
-  }
-  
-  .showcase .showcase-text {
-    padding: 3rem;
-  }
-  
-  .showcase .showcase-img {
-    min-height: 30rem;
-    background-size: cover;
-  }
-  
-  @media (min-width: 768px) {
-    .showcase .showcase-text {
-      padding: 7rem;
-    }
-  }
-  
-  .features-icons {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-  }
-  
-  .features-icons .features-icons-item {
-    max-width: 20rem;
-  }
-  
-  .features-icons .features-icons-item .features-icons-icon {
-    height: 7rem;
-  }
-  
-  .features-icons .features-icons-item .features-icons-icon i {
-    font-size: 4.5rem;
-  }
-  
-  .features-icons .features-icons-item:hover .features-icons-icon i {
-    font-size: 5rem;
-  }
-  
-  .testimonials {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-  }
-  
-  .testimonials .testimonial-item {
-    max-width: 18rem;
-  }
-  
-  .testimonials .testimonial-item img {
-    max-width: 12rem;
-    box-shadow: 0px 5px 5px 0px #adb5bd;
-  }
-  
-  .call-to-action {
-    position: relative;
-    background-color: #343a40;
-    /* background: url("../../../images/logo192.png") no-repeat center center; */
-    background-size: cover;
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-  }
-  
-  .call-to-action .overlay {
-    position: absolute;
-    background-color: #212529;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0.3;
-  }
-  
-  footer.footer {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-  }
-  
-  .header {
-    text-align: center;
-  }
-  
-  .custom-btn-toolbar {
-    display: inline !important;
-  }
-  
-  .custom-btn-toolbar > .btn {
-    margin-right: 1rem;
-  }
-  
+  font-size: 64px;
+  line-height: 78px;
+}
+
+.home-header-title {
+  width: 218px;
+  height: 78px;
+  /* left: 93px;
+  top: 131px; */
+
+  font-family: Product Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 64px;
+  line-height: 78px;
+
+  /* identical to box height */
+
+  color: #ffffff;
+}
+.home-header-subtitle {
+  /* width: 1315px; */
+  height: 78px;
+  /* left: 93px;
+  top: 198px; */
+
+  font-family: Product Sans Thin;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 64px;
+  line-height: 78px;
+  color: #ffffff;
+}
+
+.home-search-container {
+  width: 1182px;
+  position: relative;
+  height: 83px;
+  left: 90px;
+  /* top: 340px; */
+}
+
+.home-search-title {
+  /* position: absolute; */
+  width: 217px;
+height: 22px;
+left: 130px;
+top: 340px;
+
+  font-family: Product Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+
+  color: #ffffff;
+}
+.home-search-button{
+  background: #FFAF00;
+border-radius: 0px 5px 5px 0px;
+font-family: Product Sans;
+font-style: normal;
+/* font-weight: bold; */
+font-size: 18px;
+line-height: 22px;
+
+/* identical to box height */
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}
+
+footer.footer {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.header {
+  text-align: center;
+}
+
+.custom-btn-toolbar {
+  display: inline !important;
+}
+
+.custom-btn-toolbar > .btn {
+  margin-right: 1rem;
+}
+
+.container-quota {
+  position: absolute;
+  width: 62px;
+  height: 34px;
+  /* left: 404px;
+  top: 1082px; */
+  margin-left: 14rem;
+  margin-top: 1rem;
+  background: #ffffff;
+  border-radius: 5px 0px 0px 5px;
+}

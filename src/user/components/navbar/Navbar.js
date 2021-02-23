@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
-  Navbar,
+  Navbar as Div,
   Image,
   Nav,
   NavDropdown,
@@ -9,65 +9,67 @@ import {
   Button,
 } from "react-bootstrap/";
 import Login from "../../components/login/Login";
+import ProfileIcon from "./ProfileIcon";
+import AdminIcon from "./AdminIcon";
 import Signup from "../../components/login/Signup";
-import Picture from "./Picture";
 import DWT from "../../../icons/DWT.png";
-import LogoutIcon from "../../../icons/logout.png";
-import UserIcon from "../../../icons/user.png";
-import BillIcon from "../../../icons/bill.png";
 import { Link } from "react-router-dom";
+import UploadPictureContext from "../../context/UploadPictureContext";
+import JumbImg from "../../../images/Jumbotron.png";
 
-// import JumbImg from "../../../images/Jumbotron.png";
-const NavUser = () => {
+import "./navbar.css";
+
+const NavUser = (props) => {
+  const { backgroundImgTrue } = props;
+  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [rerender, setRerender] = useState(props.isImageUploaded);
+  const { count, setCount } = useContext(UploadPictureContext);
+  const cekLoggedIn = () => {
+    if (localStorage.getItem("token")) {
+      setisLoggedIn(true);
+    } else {
+      setisLoggedIn(false);
+    }
+  };
+  useEffect(() => {
+    cekLoggedIn();
+  }, [rerender]);
+
+  useEffect(() => {
+    cekLoggedIn();
+  }, [count]);
   return (
-    <Navbar bg-color="red " expand="lg" className="">
-      <Navbar.Brand>
-        <Nav.Link>
-          <Link to="/">
-            <Image
-              style={{ width: "100%", paddingBottom: "1rem" }}
-              src={DWT}
-              fluid
-            />
-          </Link>
-        </Nav.Link>
-      </Navbar.Brand>
-      <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-        <Login></Login>
-        <NavDropdown
-          title={<Image src={UserIcon} width="30" height="30"/>}
-          roundedCircle
-          id="basic-nav-dropdown"
-          drop="left"
-        >
-        
-          <NavDropdown.Item href="#">
-          <Nav>
-          <Link to="/Profile">
-          <Image style={{ width: "30px" }} src={UserIcon} fluid /> Profile
-          </Link>
-            </Nav>
-          </NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.2">
-          <Nav>
-          <Link to="/Payment">
-          <Image style={{ width: "30px" }} src={BillIcon} fluid /> PayProfile
-          </Link>
-            </Nav>
-          </NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item href="#action/3.3">
-          <Link to="/">
-          <Image style={{ width: "30px" }} src={LogoutIcon} fluid /> logout
-          </Link>
-          </NavDropdown.Item>
-        </NavDropdown>
-        {/* gak kepakai */}
-        {/* <Signup></Signup> */}
-        {/* <Picture></Picture> */}
-      </Navbar.Collapse>
-    </Navbar>
-    
+    <Div
+      className="navbar-container"
+      style={
+        backgroundImgTrue === false
+          ? { backgroundImage: ` ` }
+          : {
+              backgroundImage: `url(${JumbImg})`,
+            }
+      }
+    >
+      <Div.Brand>
+        <Link to={{ pathname: `/` }}>
+          <Image className="logo" src={DWT} fluid />
+        </Link>
+      </Div.Brand>
+      <Div.Collapse id="basic-navbar-nav" className="justify-content-end">
+        {!localStorage.getItem("token") && (
+          <>
+            {" "}
+            <Login setisLoggedIn={setisLoggedIn} />{" "}
+            <Signup setisLoggedIn={setisLoggedIn}/>{" "}
+          </>
+        )}
+        {localStorage.getItem("admin") === "false" && (
+          <ProfileIcon setisLoggedIn={setisLoggedIn} rerender={props.isImageUploaded}/>
+        )}
+        {localStorage.getItem("admin") === "true" && (
+          <AdminIcon setisLoggedIn={setisLoggedIn} />
+        )}
+      </Div.Collapse>
+    </Div>
   );
 };
 

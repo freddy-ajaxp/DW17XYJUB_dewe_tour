@@ -1,13 +1,13 @@
-import React from "react";
-import { MemoryRouter, Switch, Route } from "react-router-dom";
-
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Container from "react-bootstrap/Container";
 import {
   Button,
   Card,
   Row,
-  Form,Nav,
+  Form,
   InputGroup,
   FormControl,
 } from "react-bootstrap";
@@ -16,255 +16,200 @@ import IconAgen from "../../../icons/agent_1.png";
 import IconGuarantee from "../../../icons/guarantee_1.png";
 import IconHeart from "../../../icons/heart_1.png";
 import IconSupport from "../../../icons/support_1.png";
-import { Link } from "react-router-dom";
 import Navbar from "../../../user/components/navbar/Navbar";
-import JumbImg from "../../../images/Jumbotron.png";
-import Dest1 from "../../../images/Dest1.png";
-import Dest2 from "../../../images/Dest2.png";
-import Dest3 from "../../../images/Dest3.png";
-import Dest4 from "../../../images/Dest4.png";
-import Dest5 from "../../../images/Dest5.png";
-import Dest6 from "../../../images/Dest6.png";
+import "./home.css";
 
-// const urlGambar = '';
-const Home = () => (
-  //   <MemoryRouter>
-  <React.Fragment>
-    <div
-      style={{
-        backgroundImage: `url(${require('../../../images/Jumbotron.png')})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
-    >
-      <Jumbotron
-        className="jumbotron"
-        style={{ background: "rgba(0,0,0,0.0)", color: "#fff" }}
-      >
-        <h1 style={{ textAlign: "left", textShadow: "2px 2px #000000" }}>
-          Explore
-        </h1>
-        <h3 style={{ textAlign: "left", textShadow: "2px 2px #000000", FontFamily: "Product Sans Thin"}}>
-          Your Amazing City Together
-        </h3>
-        <br></br>
-        <br></br>
-        <p style={{ textAlign: "left", textShadow: "2px 2px #000000" }}>
-          Find great place to holiday
+//START
+const dotenv = require("dotenv");
+const cardPromotionHome = [
+  {
+    // image:  {IconGuarantee},
+    image: IconGuarantee,
+    title: "Best Price",
+    desc: "A small river named Duren flows by their place and supplies",
+  },
+  {
+    image: IconHeart,
+    title: "Travellers Love Us",
+    desc: "A small river named Duren flows by their place and supplies",
+  },
+  {
+    image: IconSupport,
+    title: "Best Travel Agent",
+    desc: "A small river named Duren flows by their place and supplies",
+  },
+  {
+    image: IconAgen,
+    title: "Our Dedicated Support",
+    desc: "A small river named Duren flows by their place and supplies",
+  },
+];
+
+const Home = (props) => {
+  const [todos, setTodos] = useState([]);
+  const [keyword, setKeyword] = useState('');
+
+  const getTodos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const result = await axios.get("http://localhost:5001/api/trips");
+      const resultData = result.data.data.trips;
+      setTodos(resultData);
+    } catch {
+      console.log("error");
+    }
+  };
+  const listTrips = todos.map((dataTrip) => (
+    <Card style={{ width: "18rem", margin: "35px" }}>
+      <div className="container-quota">
+        <p style={{ textAlign: "center", padding: "5px" }}>
+          {dataTrip.Transaction?.takenTrip
+            ? `${dataTrip.Transaction?.takenTrip} / ${dataTrip.quota}`
+            : `0 / ${dataTrip.quota}`}
         </p>
-        <Form>
-          <InputGroup>
-            <FormControl
-              type="text"
-              placeholder="Cari Destinasi"
-              aria-label="Input group example"
-              aria-describedby="btnGroupAddon2"
-            />
-            <InputGroup.Append>
-              <InputGroup.Text id="btnGroupAddon2">Search</InputGroup.Text>
-            </InputGroup.Append>
-          </InputGroup>
-        </Form>
-      </Jumbotron>
-      {/* </Container> */}
-    </div>
+      </div>
+      <Link
+        to={{
+          pathname: `/DetailTrip/${dataTrip.id}`,
+          state: {
+            pesan: "pesan dikirim",
+          },
+        }}
+      >
+        <Card.Img
+          style={{ padding: "10px", align: "center" }}
+          variant="top"
+          src={dataTrip.image}
+        />
+      </Link>
+      <Card.Body>
+        <Card.Title style={{ fontSize: "medium" }}>
+          <b>{dataTrip.title.slice(0, 25) + "..."}</b>
+        </Card.Title>
+        <Card.Text>
+          <p
+            class="card-text float-left"
+            style={{ color: "orange", fontWeight: "bold" }}
+          >
+            IDR.
+            {`${dataTrip.price
+              .toString()
+              .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`}
+          </p>
+          <p class="card-text float-right">{dataTrip.Country.nama_negara}</p>
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  ));
 
-    <div>
-      <Container className="p-3">
-        <Row>
-          <Card style={{ width: "12rem", margin: "40px" }}>
-            <Card.Img
-              style={{ width: "5rem", marginTop: "30%" }}
-              className="rounded mx-auto d-block"
-              variant="top"
-              src={IconGuarantee}
-            />
-            <Card.Body>
-              <Card.Title style={{ textAlign: "center" }}>
-                Best Price
-              </Card.Title>
-              <Card.Text>
-                A small river named Duren flows by their place and supplies
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "12rem", margin: "40px" }}>
-          <Nav.Link>
-          <Link to="/DetailTrip">
-          <Card.Img
-              style={{ width: "5rem", marginTop: "30%" }}
-              className="rounded mx-auto d-block"
-              variant="top"
-              src={IconHeart}
-            />
-          </Link>
-          </Nav.Link>
-            <Card.Body>
-              <Card.Title style={{ textAlign: "center" }}>
-                Travellers Love Us
-              </Card.Title>
-              <Card.Text>
-                A small river named Duren flows by their place and supplies
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "12rem", margin: "40px" }}>
-            <Card.Img
-              style={{ width: "5rem", marginTop: "30%" }}
-              className="rounded mx-auto d-block"
-              variant="top"
-              src={IconSupport}
-            />
-            <Card.Body>
-              <Card.Title style={{ textAlign: "center" }}>
-                Best Travel Agent
-              </Card.Title>
-              <Card.Text>
-                A small river named Duren flows by their place and supplies
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "12rem", margin: "40px" }}>
-          <a href="/DetailTrip">
-            <Card.Img
-              style={{ width: "5rem", marginTop: "30%" }}
-              className="rounded mx-auto d-block"
-              variant="top"
-              src={IconAgen}
-            />
-            </a>
-            <Card.Body>
-              <Card.Title style={{ textAlign: "center" }}>
-                Our Dedicated Support
-              </Card.Title>
-              <Card.Text>
-                A small river named Duren flows by their place and supplies
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Row>
 
-        <Row>
-          <Container>
-            <h1 style={{ textAlign: "center" }}>Group Tour</h1>
-          </Container>
-        </Row>
+  const listItems = cardPromotionHome.map((dataCard) => {
+    return (
+      <Card style={{ width: "12rem", margin: "40px" }}>
+        <Card.Img
+          style={{ width: "5rem", marginTop: "30%" }}
+          className="rounded mx-auto d-block"
+          variant="top"
+          src={dataCard.image}
+        />
+        <Card.Body>
+          <Card.Title style={{ textAlign: "center" }}>
+            {dataCard.title}
+          </Card.Title>
+          <Card.Text>{dataCard.desc}</Card.Text>
+        </Card.Body>
+      </Card>
+    );
+  });
+  
 
-        <Row>
-        
-          <Card style={{ width: "18rem", margin: "35px" }}>
-          <Link to="/DetailTrip">            <Card.Img
-              style={{ padding: "10px", align: "center" }}
-              variant="top"
-              src={Dest1}
-            /></Link>
+  const searchHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await axios.get("http://localhost:5001/api/search", {
+        params: {
+          keyword,
+        },
+      });
+      const resultData = result.data.data.trips;
+      setTodos(resultData);
+    } catch (err) {}
+  };
 
-            <Card.Body>
-              <Card.Title style={{ fontSize: "medium" }}>
-                <b>6D/4N Exciting Summer in ...</b>
-              </Card.Title>
-              <Card.Text>
-                <p class="card-text float-left">Rp. 4,000,000</p>
-                <p class="card-text float-right">South Korea</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "35px" }}>
-          <a href="/DetailTrip">
-            <Card.Img
-              style={{ padding: "10px", align: "center" }}
-              variant="top"
-              src={Dest2}
-            />
-            </a>
-            <Card.Body>
-              <Card.Title style={{ fontSize: "medium" }}>
-                <b>8D/6N Wonderful Autum ...</b>
-              </Card.Title>
-              <Card.Text>
-                <p class="card-text float-left">Rp. 5,000,000</p>
-                <p class="card-text float-right">Japan</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "35px" }}>
-          <a href="/DetailTrip">
-            <Card.Img
-              style={{ padding: "10px", align: "center" }}
-              variant="top"
-              src={Dest3}
-            />
-            </a>
-            <Card.Body>
-              <Card.Title style={{ fontSize: "medium" }}>
-                <b>4D/3N Overland Jakarta B...</b>
-              </Card.Title>
-              <Card.Text>
-                <p class="card-text float-left">Rp. 2,000,000</p>
-                <p class="card-text float-right">Indonesia</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "35px" }}>
-          <a href="/DetailTrip">
-            <Card.Img
-              style={{ padding: "10px", align: "center" }}
-              variant="top"
-              src={Dest4}
-            />
-            </a>
-            <Card.Body>
-              <Card.Title style={{ fontSize: "medium" }}>
-                <b>4D/3N Labuan Bajo Delight</b>
-              </Card.Title>
-              <Card.Text>
-                <p class="card-text float-left">Rp. 2,000,000</p>
-                <p class="card-text float-right">Indonesia</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "35px" }}>
-          <a href="/DetailTrip">
-            <Card.Img
-              style={{ padding: "10px", align: "center" }}
-              variant="top"
-              src={Dest5}
-            />
-            </a>
-            <Card.Body>
-              <Card.Title style={{ fontSize: "medium" }}>
-                <b>5D/4N Magic Tokyo Fun</b>
-              </Card.Title>
-              <Card.Text>
-                <p class="card-text float-left">Rp. 5,500,000</p>
-                <p class="card-text float-right">Japan</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "35px" }}>
-            <a href="/DetailTrip">
-              <Card.Img
-                style={{ padding: "10px", align: "center" }}
-                variant="top"
-                src={Dest6}
-              />
-            </a>
-            <Card.Body>
-              <Card.Title style={{ fontSize: "medium" }}>
-                <b>6D/4N Fun Tassie Vacation ...</b>
-              </Card.Title>
-              <Card.Text>
-                <p class="card-text float-left">Rp. 4,000,000</p>
-                <p class="card-text float-right">Australia</p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Row>
-      </Container>
-    </div>
-  </React.Fragment>
+  useEffect(() => {
+    getTodos();
+  }, []);
 
-  //   </MemoryRouter>
-);
+  return (
+    <React.Fragment>
+      <div
+        style={{
+          backgroundImage: `url(${require("../../../images/Jumbotron.png")})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      >
+        <Navbar backgroundImgTrue={false}></Navbar>
+        <Jumbotron
+          style={{
+            color: "#fff",
+            background: "rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <div className="outer" id="outer">
+            <div className="home-header">
+              <div className="home-header-title">Explore</div>
+              <div className="home-header-subtitle">
+                Your Amazing City Together
+              </div>
+            </div>
+          </div>
+          <br></br>
+          <br></br>
+
+          <div className="home-search-container">
+            <div className="home-search-title">Find great place to holiday</div>
+            <Form onSubmit={(e) => searchHandler(e)}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  placeholder="Cari Destinasi"
+                  aria-label="Input group example"
+                  aria-describedby="btnGroupAddon2"
+                  onChange={(e) => {
+                    setKeyword(e.target.value);
+                  }}
+                />
+                <InputGroup.Append>
+                  <InputGroup.Text className="home-search-button">
+                    Search
+                  </InputGroup.Text>
+                </InputGroup.Append>
+              </InputGroup>
+            </Form>
+          </div>
+        </Jumbotron>
+      </div>
+
+      <div style={{ marginTop: "-7rem" }}>
+        <Container>
+          <Row>{listItems}</Row>
+          <Row>
+            <Container>
+              <h1 style={{ textAlign: "center" }}>Group Tour</h1>
+            </Container>
+          </Row>
+
+          <Row></Row>
+          {listTrips.length < 1 && (
+            <h1 style={{ textAlign: "center" }}>Data tidak Ditemukan...</h1>
+          )}
+          {/* {listTrips ? <h1>Loading...</h1> : <Row>{listTrips}</Row>} */}
+          {listTrips.country ? <h1>Loading...</h1> : <Row>{listTrips}</Row>}
+        </Container>
+      </div>
+    </React.Fragment>
+  );
+};
 
 export default Home;

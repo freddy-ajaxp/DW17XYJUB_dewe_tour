@@ -1,0 +1,39 @@
+.container-quota {
+    position: absolute;
+    width: 62px;
+    height: 34px;
+    /* left: 404px;
+    top: 1082px; */
+    margin-left: 14rem;
+    margin-top: 1rem;
+    background: #ffffff;
+    border-radius: 5px 0px 0px 5px;
+    
+  }
+  
+
+.add-trip-btn{
+  /* position: relative; */
+  background-color: #FFAF00;
+  /* margin: auto; */
+  /* left: -55px; */
+
+}
+
+.add-trip-btn-text{
+  margin: auto;
+  font-family: Avenir;
+font-style: normal;
+font-weight: 900;
+font-size: 18px;
+line-height: 25px;
+
+/* identical to box height */
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+
+
+}

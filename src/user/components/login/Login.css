@@ -10,6 +10,13 @@
   text-align: center;
 }
 
+.modal-palma{
+  position: absolute;
+}
+.modal-hibiscus{
+  position: absolute;
+  right: 0; bottom: 0; 
+}
 .authentication form {
   margin-bottom: 1rem;
 }
