@@ -1,14 +1,18 @@
 Aplikasi tour & travel menggunakan react. Dapat digunakan untuk mempromosikan paket wisata anda.
+
 ini adalah bagian front-end (client) dari aplikasi.
+
 untuk bagian back-end (API) dapat mengunjungi [halaman ini](https://github.com/freddy-ajaxp/DW17XYJUB_dewe_tour_api).
 
 
 ## Instalasi
 download ke folder tujuan / clone
+
 jalankan `npm install`
 
 ## Penggunaan
 di halaman root jalankan `npm start`
+
 halaman browser akan terbuka otomatis
 
 ## Disclaimer
